@@ -1,9 +1,8 @@
-import math
-
 from .base.increasing_progress_schedule import IncreasingProgressSchedule
+
+from .functional import linear
 
 
 class LinearIncreasing(IncreasingProgressSchedule):
-    def _get_value(self, step, total_steps):
-        progress = step / max(1, total_steps - 1)
-        return progress
+    def _get_progress(self, step, total_steps):
+        return linear(step, total_steps)

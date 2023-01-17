@@ -25,11 +25,10 @@ class ProgressSchedule(ScheduleBase):
         if self.exclude_first:
             step += 1
             total_steps += 1
-        # get value from schedule (in [0, 1])
-        value = self._get_value(step, total_steps)
+        # get progress of schedule (going from 0 to 1)
+        progress = self._get_progress(step, total_steps)
         # adjust to "absolute value" (i.e. real learning rate)
-        value = self.abs_start_value + value * self.abs_delta
-        return value
+        return self.abs_start_value + progress * self.abs_delta
 
-    def _get_value(self, step, total_steps):
+    def _get_progress(self, step, total_steps):
         raise NotImplementedError
