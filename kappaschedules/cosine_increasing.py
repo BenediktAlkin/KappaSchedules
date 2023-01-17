@@ -1,5 +1,5 @@
 from .base.increasing_progress_schedule import IncreasingProgressSchedule
-from .functional import cosine
+from .functional.schedules import cosine
 
 
 class CosineIncreasing(IncreasingProgressSchedule):

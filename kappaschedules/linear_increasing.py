@@ -1,6 +1,6 @@
 from .base.increasing_progress_schedule import IncreasingProgressSchedule
 
-from .functional import linear
+from .functional.schedules import linear
 
 
 class LinearIncreasing(IncreasingProgressSchedule):
