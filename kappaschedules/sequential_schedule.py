@@ -20,8 +20,6 @@ class SequentialSchedule(ScheduleBase):
             schedule_configs[0].start_step = 0
         # propagate start/end
         for i in range(1, len(schedule_configs) - 1):
-            # mid-schedules have to have either start or end
-            assert schedule_configs[i].start_step is not None or schedule_configs[i].end_step is not None
             # take start_step from previous schedule
             if schedule_configs[i].start_step is None:
                 schedule_configs[i].start_step = schedule_configs[i - 1].end_step
@@ -37,10 +35,6 @@ class SequentialSchedule(ScheduleBase):
             if schedule_configs[-2].end_step is None:
                 schedule_configs[-2].end_step = schedule_configs[-1].start_step
 
-
-
-
-
         # check correctness of start/end
         if len(schedule_configs) == 1:
             # edge case: single schedule
@@ -53,6 +47,7 @@ class SequentialSchedule(ScheduleBase):
             # check 0 <= cfg[i].start <= cfg[i].end
             # check cfg[i].end <= cfg[i+1].start
             for i in range(len(schedule_configs) - 1):
+                assert schedule_configs[i].start_step is not None and schedule_configs[i].end_step is not None
                 assert 0 <= schedule_configs[i].start_step <= schedule_configs[i].end_step
                 assert schedule_configs[i].end_step <= schedule_configs[i + 1].start_step
             # last schedule is allowed to have no end_step
@@ -65,7 +60,7 @@ class SequentialSchedule(ScheduleBase):
         # step < config[0].start_step -> None
         # config[-1].end_step < step -> config[-1]
         for i in reversed(range(len(self.schedule_configs))):
-            if self.schedule_configs[i].end_step is None and self.schedule_configs[i].start_step <= step:
+            if self.schedule_configs[i].start_step <= step:
                 return self.schedule_configs[i]
         return None
 
