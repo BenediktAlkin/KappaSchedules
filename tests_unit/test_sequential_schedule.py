@@ -108,6 +108,7 @@ class TestSequentialSchedule(unittest.TestCase):
             self.assertIsNone(sched.get_sequential_schedule_config(i))
         for i in range(5, 10):
             self.assertEqual(sched.schedule_configs[0], sched.get_sequential_schedule_config(i))
+        # gap returns previous schedule
         for i in range(10, 15):
             self.assertEqual(sched.schedule_configs[0], sched.get_sequential_schedule_config(i))
         for i in range(15, 20):
