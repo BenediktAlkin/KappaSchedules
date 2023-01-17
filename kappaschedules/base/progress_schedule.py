@@ -18,7 +18,7 @@ class ProgressSchedule(ScheduleBase):
             f")"
         )
 
-    def get_value(self, step, total_steps):
+    def get_value(self, step: int, total_steps: int) -> float:
         self._check_steps(step, total_steps)
         if self.exclude_last:
             total_steps += 1

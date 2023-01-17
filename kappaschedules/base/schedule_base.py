@@ -3,7 +3,7 @@ class ScheduleBase:
     def _check_steps(step, total_steps):
         assert 0 <= step < total_steps, f"0 <= step < total_steps (step={step} total_steps={total_steps})"
 
-    def get_value(self, step, total_steps):
+    def get_value(self, step: int, total_steps: int) -> float:
         raise NotImplementedError
 
     def __repr__(self):
