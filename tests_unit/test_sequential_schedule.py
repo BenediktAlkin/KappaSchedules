@@ -97,3 +97,20 @@ class TestSequentialSchedule(unittest.TestCase):
             self.assertEqual(sched.schedule_configs[1], sched.get_sequential_schedule_config(i))
         for i in range(15, 30):
             self.assertEqual(sched.schedule_configs[2], sched.get_sequential_schedule_config(i))
+
+    def test_get_sequential_schedule_config_gap(self):
+        sched = SequentialSchedule([
+            SequentialScheduleConfig(start_step=5, end_step=10, schedule=DummySchedule()),
+            SequentialScheduleConfig(start_step=15, end_step=20, schedule=DummySchedule()),
+            SequentialScheduleConfig(schedule=DummySchedule()),
+        ])
+        for i in range(5):
+            self.assertIsNone(sched.get_sequential_schedule_config(i))
+        for i in range(5, 10):
+            self.assertEqual(sched.schedule_configs[0], sched.get_sequential_schedule_config(i))
+        for i in range(10, 15):
+            self.assertEqual(sched.schedule_configs[0], sched.get_sequential_schedule_config(i))
+        for i in range(15, 20):
+            self.assertEqual(sched.schedule_configs[1], sched.get_sequential_schedule_config(i))
+        for i in range(20, 30):
+            self.assertEqual(sched.schedule_configs[2], sched.get_sequential_schedule_config(i))
