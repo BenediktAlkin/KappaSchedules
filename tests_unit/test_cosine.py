@@ -44,7 +44,7 @@ class TestCosineDecreasing(unittest.TestCase):
         self.assertTrue(np.allclose(expected, actual), actual)
 
     def test_increasing_absmin(self):
-        sched = CosineIncreasing(abs_start_value=1e-5)
+        sched = CosineIncreasing(start_value=1e-5)
         expected = [
             1e-05,
             0.02448149713500471,

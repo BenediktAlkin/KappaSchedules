@@ -9,9 +9,9 @@ from kappaschedules.linear_increasing import LinearIncreasing
 class TestLinear(unittest.TestCase):
     def test_invalid_abs(self):
         with self.assertRaises(AssertionError):
-            LinearIncreasing(abs_start_value=2., exclude_last=False)
+            LinearIncreasing(start_value=2., exclude_last=False)
         with self.assertRaises(AssertionError):
-            LinearDecreasing(abs_end_value=2., exclude_last=False)
+            LinearDecreasing(end_value=2., exclude_last=False)
 
     def test_increasing(self):
         sched = LinearIncreasing(exclude_last=False)
@@ -73,7 +73,7 @@ class TestLinear(unittest.TestCase):
         self.assertTrue(np.allclose(expected, actual))
 
     def test_increasing_absmin(self):
-        sched = LinearIncreasing(exclude_last=False, abs_start_value=1e-5)
+        sched = LinearIncreasing(exclude_last=False, start_value=1e-5)
         actual = [sched.get_value(step, total_steps=11) for step in range(11)]
         expected = [
             1e-05,
