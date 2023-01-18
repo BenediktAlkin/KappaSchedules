@@ -1,6 +1,8 @@
-from kappaschedules.base.schedule_base import ScheduleBase
 from dataclasses import dataclass
 from typing import List
+
+from kappaschedules.base.schedule_base import ScheduleBase
+
 
 @dataclass
 class SequentialScheduleConfig:

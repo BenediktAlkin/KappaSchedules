@@ -1,8 +1,8 @@
 import unittest
-import numpy as np
 
 from kappaschedules import LinearIncreasing, CosineDecreasing, SequentialSchedule, SequentialScheduleConfig
 from tests_utils.asserts import assertIsClose
+
 
 class TestWarmupCosine(unittest.TestCase):
     def test_zero_to_one(self):

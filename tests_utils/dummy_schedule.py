@@ -1,7 +1,8 @@
 from kappaschedules.base.schedule_base import ScheduleBase
 
+
 class DummySchedule(ScheduleBase):
-    def __init__(self, step_to_value = None):
+    def __init__(self, step_to_value=None):
         super().__init__()
         self.step_to_value = step_to_value
 

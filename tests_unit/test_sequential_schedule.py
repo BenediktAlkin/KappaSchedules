@@ -1,8 +1,8 @@
 import unittest
 
 from kappaschedules.sequential_schedule import SequentialSchedule, SequentialScheduleConfig
-
 from tests_utils.dummy_schedule import DummySchedule
+
 
 class TestSequentialSchedule(unittest.TestCase):
     def test_propagate_singleconfig(self):
