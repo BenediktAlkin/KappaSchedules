@@ -3,6 +3,7 @@ from .schedule_base import ScheduleBase
 
 class ProgressSchedule(ScheduleBase):
     def __init__(self, abs_start_value, abs_delta, exclude_first=False, exclude_last=False):
+        super().__init__()
         self.abs_start_value = abs_start_value
         self.abs_delta = abs_delta
         self.exclude_first = exclude_first
@@ -18,8 +19,7 @@ class ProgressSchedule(ScheduleBase):
             f")"
         )
 
-    def get_value(self, step: int, total_steps: int) -> float:
-        self._check_steps(step, total_steps)
+    def _get_value(self, step: int, total_steps: int) -> float:
         if self.exclude_last:
             total_steps += 1
         if self.exclude_first:

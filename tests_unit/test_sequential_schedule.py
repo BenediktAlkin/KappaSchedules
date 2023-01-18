@@ -115,3 +115,20 @@ class TestSequentialSchedule(unittest.TestCase):
             self.assertEqual(sched.schedule_configs[1], sched.get_sequential_schedule_config(i))
         for i in range(20, 30):
             self.assertEqual(sched.schedule_configs[2], sched.get_sequential_schedule_config(i))
+
+    def test_get_value_before_first_schedule(self):
+        sched = SequentialSchedule([
+            SequentialScheduleConfig(start_step=5, schedule=DummySchedule(step_to_value={0: 0.5})),
+        ])
+        for i in range(5):
+            self.assertEqual(0.5, sched.get_value(i, 10))
+
+    def test_get_value_after_last_schedule(self):
+        sched = SequentialSchedule([
+            SequentialScheduleConfig(start_step=3, end_step=5, schedule=DummySchedule(step_to_value={0: 0.1, 1: 0.2})),
+        ])
+        for i in range(4):
+            self.assertEqual(0.1, sched.get_value(i, 10))
+        self.assertEqual(0.2, sched.get_value(4, 10))
+        for i in range(5, 10):
+            self.assertEqual(0.2, sched.get_value(i, 10))
