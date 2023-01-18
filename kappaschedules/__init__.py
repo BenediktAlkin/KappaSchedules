@@ -8,3 +8,4 @@ from .cosine_decreasing import CosineDecreasing
 from .cosine_increasing import CosineIncreasing
 from .linear_decreasing import LinearDecreasing
 from .linear_increasing import LinearIncreasing
+from .sequential_schedule import SequentialSchedule, SequentialScheduleConfig
