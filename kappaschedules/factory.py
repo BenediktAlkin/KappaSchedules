@@ -7,7 +7,9 @@ from copy import deepcopy
 def object_to_schedule(obj) -> ScheduleBase:
     if obj is None:
         return None
-    assert isinstance(obj, (list, dict))
+    if not isinstance(obj, (list, dict)):
+        assert isinstance(obj, ScheduleBase)
+        return obj
 
     if isinstance(obj, list):
         # sequential schedule
