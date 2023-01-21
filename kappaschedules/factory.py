@@ -5,6 +5,8 @@ import inspect
 from copy import deepcopy
 
 def object_to_schedule(obj) -> ScheduleBase:
+    if obj is None:
+        return None
     assert isinstance(obj, (list, dict))
 
     if isinstance(obj, list):
