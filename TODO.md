@@ -1,0 +1,1 @@
+- maybe adding a mechanism to directly specify via epoch/update/sample makes sense
