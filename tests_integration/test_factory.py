@@ -18,6 +18,17 @@ class TestFactory(unittest.TestCase):
         self.assertIsInstance(sched, ks.SequentialStepSchedule)
         self.assertIsInstance(sched.schedule_configs[0].schedule, ks.LinearIncreasingSchedule)
 
+    def test_sequential_mixed(self):
+        with self.assertRaises(AssertionError):
+            ks.object_to_schedule([
+                dict(schedule=dict(kind="linear_increasing_schedule"), end_percent=0.3),
+                dict(schedule=dict(kind="linear_increasing_schedule"), end_step=5),
+            ])
+
+    def test_sequential_no_schedule(self):
+        with self.assertRaises(AssertionError):
+            ks.object_to_schedule([dict(end_percent=0.3)])
+
     def test_sequential_percent(self):
         sched = ks.object_to_schedule([
             dict(
