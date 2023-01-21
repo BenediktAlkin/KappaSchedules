@@ -4,14 +4,14 @@ from .base import ScheduleBase
 
 
 @dataclass
-class SequentialScheduleConfig:
+class SequentialStepScheduleConfig:
     schedule: ScheduleBase
     start_step: int = None
     end_step: int = None
 
 
-class SequentialSchedule(ScheduleBase):
-    def __init__(self, schedule_configs: List[SequentialScheduleConfig]):
+class SequentialStepSchedule(ScheduleBase):
+    def __init__(self, schedule_configs: List[SequentialStepScheduleConfig]):
         super().__init__()
         assert len(schedule_configs) > 0
         self.schedule_configs = schedule_configs
@@ -57,7 +57,7 @@ class SequentialSchedule(ScheduleBase):
             else:
                 assert 0 <= schedule_configs[-1].start_step <= schedule_configs[-1].end_step
 
-    def get_sequential_schedule_config(self, step: int) -> SequentialScheduleConfig:
+    def get_sequential_schedule_config(self, step: int) -> SequentialStepScheduleConfig:
         # step < config[0].start_step -> None
         # config[-1].end_step < step -> config[-1]
         for i in reversed(range(len(self.schedule_configs))):
