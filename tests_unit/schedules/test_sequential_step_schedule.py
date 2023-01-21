@@ -125,10 +125,28 @@ class TestSequentialStepSchedule(unittest.TestCase):
 
     def test_get_value_after_last_schedule(self):
         sched = SequentialStepSchedule([
-            SequentialStepScheduleConfig(start_step=3, end_step=5, schedule=DummySchedule(step_to_value={0: 0.1, 1: 0.2})),
+            SequentialStepScheduleConfig(
+                start_step=3,
+                end_step=5,
+                schedule=DummySchedule(step_to_value={0: 0.1, 1: 0.2}),
+            ),
         ])
         for i in range(4):
             self.assertEqual(0.1, sched.get_value(i, 10))
         self.assertEqual(0.2, sched.get_value(4, 10))
         for i in range(5, 10):
             self.assertEqual(0.2, sched.get_value(i, 10))
+
+    def test_tostring(self):
+        sched = SequentialStepSchedule([
+            SequentialStepScheduleConfig(
+                start_step=3,
+                end_step=5,
+                schedule=DummySchedule(step_to_value={0: 0.1, 1: 0.2}),
+            ),
+        ])
+        lines = str(sched).split("\n")
+        self.assertEqual(3, len(lines))
+        self.assertEqual(SequentialStepSchedule.__name__, lines[0])
+        self.assertEqual("  (0): 3 - 5 Dummy", lines[1])
+        self.assertEqual(")", lines[2])

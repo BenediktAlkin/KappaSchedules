@@ -9,6 +9,12 @@ class SequentialStepScheduleConfig:
     start_step: int = None
     end_step: int = None
 
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return f"{self.start_step} - {self.end_step} {self.schedule}"
+
 
 class SequentialStepSchedule(ScheduleBase):
     def __init__(self, schedule_configs: List[SequentialStepScheduleConfig]):
@@ -83,4 +89,8 @@ class SequentialStepSchedule(ScheduleBase):
         return config.schedule.get_value(adj_step, adj_total_steps)
 
     def __str__(self):
-        raise NotImplementedError
+        return "\n".join([
+            type(self).__name__,
+            "\n".join(map(lambda item: f"  ({item[0]}): {item[1]}", enumerate(self.schedule_configs))),
+            ")",
+        ])

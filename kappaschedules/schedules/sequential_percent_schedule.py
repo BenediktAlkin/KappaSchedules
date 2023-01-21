@@ -6,8 +6,14 @@ from .base import ScheduleBase
 @dataclass
 class SequentialPercentScheduleConfig:
     schedule: ScheduleBase
-    start_percent: int = None
-    end_percent: int = None
+    start_percent: float = None
+    end_percent: float = None
+
+    def __repr__(self):
+        return str(self)
+
+    def __str__(self):
+        return f"{self.start_percent * 100:.0f}% - {self.end_percent * 100:.0f}% {self.schedule}"
 
 
 class SequentialPercentSchedule(ScheduleBase):
@@ -89,4 +95,8 @@ class SequentialPercentSchedule(ScheduleBase):
         return config.schedule.get_value(adj_step, adj_total_steps)
 
     def __str__(self):
-        raise NotImplementedError
+        return "\n".join([
+            type(self).__name__,
+            "\n".join(map(lambda item: f"  ({item[0]}): {item[1]}", enumerate(self.schedule_configs))),
+            ")",
+        ])
