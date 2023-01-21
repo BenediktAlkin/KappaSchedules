@@ -1,14 +1,14 @@
 import unittest
 
-from kappaschedules import LinearIncreasing, CosineDecreasing, SequentialSchedule, SequentialScheduleConfig
+from kappaschedules import LinearIncreasingSchedule, CosineDecreasingSchedule, SequentialSchedule, SequentialScheduleConfig
 from tests_utils.asserts import assertIsClose
 
 
 class TestWarmupCosine(unittest.TestCase):
     def test_zero_to_one(self):
         sched = SequentialSchedule([
-            SequentialScheduleConfig(end_step=4, schedule=LinearIncreasing(exclude_first=True, exclude_last=True)),
-            SequentialScheduleConfig(schedule=CosineDecreasing(exclude_last=True)),
+            SequentialScheduleConfig(end_step=4, schedule=LinearIncreasingSchedule(exclude_first=True, exclude_last=True)),
+            SequentialScheduleConfig(schedule=CosineDecreasingSchedule(exclude_last=True)),
         ])
         total_steps = 10
         values = [sched.get_value(i, total_steps) for i in range(total_steps)]

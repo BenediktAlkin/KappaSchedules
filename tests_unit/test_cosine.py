@@ -2,13 +2,13 @@ import unittest
 
 import numpy as np
 
-from kappaschedules.cosine_decreasing import CosineDecreasing
-from kappaschedules.cosine_increasing import CosineIncreasing
+from kappaschedules.schedules.cosine_decreasing_schedule import CosineDecreasingSchedule
+from kappaschedules.schedules.cosine_increasing_schedule import CosineIncreasingSchedule
 
 
-class TestCosineDecreasing(unittest.TestCase):
+class TestCosineDecreasingSchedule(unittest.TestCase):
     def test_decreasing(self):
-        sched = CosineDecreasing()
+        sched = CosineDecreasingSchedule()
         expected = [
             1.0,
             0.9755282581475768,
@@ -26,7 +26,7 @@ class TestCosineDecreasing(unittest.TestCase):
         self.assertTrue(np.allclose(expected, actual), actual)
 
     def test_increasing(self):
-        sched = CosineIncreasing()
+        sched = CosineIncreasingSchedule()
         expected = [
             0.0,
             0.024471741852423234,
@@ -44,7 +44,7 @@ class TestCosineDecreasing(unittest.TestCase):
         self.assertTrue(np.allclose(expected, actual), actual)
 
     def test_increasing_absmin(self):
-        sched = CosineIncreasing(start_value=1e-5)
+        sched = CosineIncreasingSchedule(start_value=1e-5)
         expected = [
             1e-05,
             0.02448149713500471,

@@ -1,6 +1,6 @@
 import unittest
 
-from kappaschedules.sequential_schedule import SequentialSchedule, SequentialScheduleConfig
+from kappaschedules.schedules.sequential_schedule import SequentialSchedule, SequentialScheduleConfig
 from tests_utils.dummy_schedule import DummySchedule
 
 

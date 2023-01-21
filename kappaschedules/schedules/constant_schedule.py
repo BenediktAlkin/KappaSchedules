@@ -1,7 +1,7 @@
-from .base.schedule_base import ScheduleBase
+from kappaschedules.base.schedule_base import ScheduleBase
 
 
-class Constant(ScheduleBase):
+class ConstantSchedule(ScheduleBase):
     def __init__(self, value):
         super().__init__()
         self.value = value
