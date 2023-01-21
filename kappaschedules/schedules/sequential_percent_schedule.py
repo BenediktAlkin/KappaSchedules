@@ -89,6 +89,8 @@ class SequentialPercentSchedule(ScheduleBase):
         adj_step = step - start_step
         end_step = int(total_steps * config.end_percent)
         adj_total_steps = end_step - start_step
+        if adj_total_steps == 0:
+            return config.schedule.get_value(0, 1)
         if adj_step >= adj_total_steps:
             # return last value of previous schedule
             return config.schedule.get_value(adj_total_steps - 1, adj_total_steps)
