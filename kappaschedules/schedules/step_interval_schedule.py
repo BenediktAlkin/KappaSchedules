@@ -15,5 +15,5 @@ class StepIntervalSchedule(ScheduleBase):
     def _get_value(self, step: int, total_steps: int) -> float:
         progress = step / total_steps
         # round to 10th decimal place to avoid floating point precision errors
-        step = int(round(progress / self.interval, 10))
-        return self.start_value * self.factor ** step
+        step_idx = int(round(progress / self.interval, 10))
+        return self.start_value * self.factor ** step_idx
