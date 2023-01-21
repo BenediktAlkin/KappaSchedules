@@ -8,6 +8,8 @@ class SequentialScheduleConfig:
     schedule: ScheduleBase
     start_step: int = None
     end_step: int = None
+    start_percent: float = None
+    end_percent: float = None
 
 
 class SequentialSchedule(ScheduleBase):
@@ -19,43 +21,75 @@ class SequentialSchedule(ScheduleBase):
         # if first schedule has no start_step -> set to 0 -> this ensures every schedule has a start_step
         if schedule_configs[0].start_step is None:
             schedule_configs[0].start_step = 0
+        if schedule_configs[0].start_percent is None:
+            schedule_configs[0].start_percent = 0.
         # propagate start/end
         for i in range(1, len(schedule_configs) - 1):
             # take start_step from previous schedule
             if schedule_configs[i].start_step is None:
                 schedule_configs[i].start_step = schedule_configs[i - 1].end_step
+            if schedule_configs[i].start_percent is None:
+                schedule_configs[i].start_percent = schedule_configs[i - 1].end_percent
             # take end_step from next schedule
             if schedule_configs[i].end_step is None:
                 schedule_configs[i].end_step = schedule_configs[i + 1].start_step
+            if schedule_configs[i].end_percent is None:
+                schedule_configs[i].end_percent = schedule_configs[i + 1].start_percent
         # edge case: last schedule propagate
         if len(schedule_configs) > 1:
             # propagate [-2].end_step forward
             if schedule_configs[-1].start_step is None:
                 schedule_configs[-1].start_step = schedule_configs[-2].end_step
+            if schedule_configs[-1].start_percent is None:
+                schedule_configs[-1].start_percent = schedule_configs[-2].end_percent
             # propagate [-1].start_step backward
             if schedule_configs[-2].end_step is None:
                 schedule_configs[-2].end_step = schedule_configs[-1].start_step
+            if schedule_configs[-2].end_percent is None:
+                schedule_configs[-2].end_percent = schedule_configs[-1].start_percent
 
         # check correctness of start/end
         if len(schedule_configs) == 1:
             # edge case: single schedule
-            # always: 0 <= start
-            # if end is not None: start <= end
+            # always: 0 <= start_step
+            # if end is not None: start_step <= end_step
             assert 0 <= schedule_configs[0].start_step
             if schedule_configs[0].end_step is not None:
                 assert schedule_configs[0].start_step <= schedule_configs[0].end_step
+            # always: 0 <= start_percent
+            # if end_percent is not None: start_percent <= end_percent <= 1.
+            assert 0. <= schedule_configs[0].start_percent <= 1.
+            if schedule_configs[0].end_percent is not None:
+                assert schedule_configs[0].start_percent <= schedule_configs[0].end_percent <= 1.
         else:
             # check 0 <= cfg[i].start <= cfg[i].end
             # check cfg[i].end <= cfg[i+1].start
             for i in range(len(schedule_configs) - 1):
-                assert schedule_configs[i].start_step is not None and schedule_configs[i].end_step is not None
-                assert 0 <= schedule_configs[i].start_step <= schedule_configs[i].end_step
-                assert schedule_configs[i].end_step <= schedule_configs[i + 1].start_step
+                assert (
+                    (schedule_configs[i].start_step is not None and schedule_configs[i].end_step is not None) or
+                    (schedule_configs[i].start_percent is not None and schedule_configs[i].end_percent is not None)
+                )
+                if schedule_configs[i].start_step is not None and schedule_configs[i].end_step is not None:
+                    assert 0 <= schedule_configs[i].start_step <= schedule_configs[i].end_step
+                    assert schedule_configs[i].end_step <= schedule_configs[i + 1].start_step
+
+                if schedule_configs[i].start_percent is not None and schedule_configs[i].end_percent is not None:
+                    assert 0 <= schedule_configs[i].start_percent <= schedule_configs[i].end_percent <= 1.
+                    assert schedule_configs[i].end_percent <= schedule_configs[i + 1].start_percent
             # last schedule is allowed to have no end_step
             if schedule_configs[-1].end_step is None:
-                assert 0 <= schedule_configs[-1].start_step
+                if schedule_configs[-1].start_step is not None:
+                    assert 0 <= schedule_configs[-1].start_step
             else:
-                assert 0 <= schedule_configs[-1].start_step <= schedule_configs[-1].end_step
+                if schedule_configs[-1].start_step is not None and schedule_configs[-1].end_step is not None:
+                    assert 0 <= schedule_configs[-1].start_step <= schedule_configs[-1].end_step
+            # last schedule is allowed to have no end_percent
+            if schedule_configs[-1].end_percent is None:
+                if schedule_configs[-1].start_percent is not None:
+                    assert 0 <= schedule_configs[-1].start_percent <= 1.
+            else:
+                if schedule_configs[-1].start_percent is not None and schedule_configs[-1].end_percent is not None:
+                    assert 0 <= schedule_configs[-1].start_percent <= schedule_configs[-1].end_percent
 
     def get_sequential_schedule_config(self, step: int) -> SequentialScheduleConfig:
         # step < config[0].start_step -> None
