@@ -1,4 +1,4 @@
-from kappaschedules.base.schedule_base import ScheduleBase
+from .base import ScheduleBase
 
 
 class ConstantSchedule(ScheduleBase):

@@ -1,6 +1,6 @@
-from kappaschedules.base.decreasing_progress_schedule import DecreasingProgressSchedule
+from .base import DecreasingProgressSchedule
 
-from kappaschedules.functional.schedules import linear
+from .functional.schedules import linear
 
 
 class LinearDecreasingSchedule(DecreasingProgressSchedule):

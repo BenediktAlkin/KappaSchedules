@@ -1,5 +1,5 @@
-from kappaschedules.base.increasing_progress_schedule import IncreasingProgressSchedule
-from kappaschedules.functional.schedules import cosine
+from .base import IncreasingProgressSchedule
+from .functional.schedules import cosine
 
 
 class CosineIncreasingSchedule(IncreasingProgressSchedule):
