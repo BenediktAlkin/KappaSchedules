@@ -24,7 +24,7 @@ class SequentialPercentSchedule(ScheduleBase):
 
         # if first schedule has no start_percent -> set to 0 -> this ensures every schedule has a start_percent
         if schedule_configs[0].start_percent is None:
-            schedule_configs[0].start_percent = 0
+            schedule_configs[0].start_percent = 0.
         # propagate start/end
         for i in range(1, len(schedule_configs) - 1):
             # take start_percent from previous schedule
