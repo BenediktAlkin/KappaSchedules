@@ -13,7 +13,7 @@ class StepFixedSchedule(ScheduleBase):
     def __str__(self):
         return f"{type(self).__name__}(start_value={self.start_value}, factor={self.factor}, steps={self.steps})"
 
-    def _get_value(self, step: int, total_steps: int) -> float:
+    def _get_value(self, step: int, total_steps: int, abs_step: int = None) -> float:
         progress = step / total_steps
         # search for step
         for i in range(len(self.steps)):

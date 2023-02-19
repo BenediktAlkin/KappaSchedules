@@ -9,5 +9,5 @@ class ConstantSchedule(ScheduleBase):
     def __str__(self):
         return f"{type(self).__name__}(value={self.value})"
 
-    def _get_value(self, step: int, total_steps: int) -> float:
+    def _get_value(self, step: int, total_steps: int, abs_step: int = None) -> float:
         return self.value

@@ -7,5 +7,5 @@ class IncreasingProgressSchedule(ProgressSchedule):
         assert delta >= 0.
         super().__init__(start_value=start_value, delta=delta, **kwargs)
 
-    def _get_progress(self, step, total_steps):
+    def _get_progress(self, step: int, total_steps: int, abs_step: int):
         raise NotImplementedError

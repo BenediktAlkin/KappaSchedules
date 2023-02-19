@@ -7,7 +7,25 @@ from kappaschedules.schedules.inverse_sqrt_decreasing_schedule import InverseSqr
 
 class TestInverseSqrtDecreasingSchedule(unittest.TestCase):
     def test_decreasing(self):
-        sched = InverseSqrtDecreasingSchedule(warmup_steps=10)
+        sched = InverseSqrtDecreasingSchedule()
+        expected = [
+            1.0,
+            0.7071067811865476,
+            0.5773502691896257,
+            0.5,
+            0.44721359549995787,
+            0.408248290463863,
+            0.3779644730092273,
+            0.35355339059327373,
+            0.33333333333333326,
+            0.316227766016838,
+            0.30151134457776363,
+        ]
+        actual = [sched.get_value(step, total_steps=11) for step in range(11)]
+        self.assertTrue(np.allclose(expected, actual), actual)
+
+    def test_decreasing_warmup(self):
+        sched = InverseSqrtDecreasingSchedule()
         expected = [
             1.0,
             0.9534625892455924,
@@ -21,6 +39,6 @@ class TestInverseSqrtDecreasingSchedule(unittest.TestCase):
             0.7254762501100117,
             0.7071067811865476,
         ]
-        actual = [sched.get_value(step, total_steps=11) for step in range(11)]
+        actual = [sched.get_value(step, total_steps=11, abs_step=step + 10) for step in range(11)]
         self.assertTrue(np.allclose(expected, actual), actual)
 

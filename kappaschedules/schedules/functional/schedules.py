@@ -12,7 +12,12 @@ def cosine(step, total_steps):
     return 1 - (1 + math.cos(math.pi * progress)) / 2
 
 
-def inverse_sqrt(step, warmup_steps):
+def inverse_sqrt(step, abs_step):
     """ inverse square root schedule starting from 1 and going towards 0 """
     # https://github.com/facebookresearch/fairseq/blob/main/fairseq/optim/lr_scheduler/inverse_square_root_schedule.py
-    return (step + warmup_steps) ** -0.5 * warmup_steps ** 0.5
+    decay_factor  = max(1, abs_step - step) ** 0.5
+    if step == abs_step:
+        cur_step = abs_step + 1
+    else:
+        cur_step = abs_step
+    return cur_step ** -0.5 * decay_factor

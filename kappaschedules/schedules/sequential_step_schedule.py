@@ -71,22 +71,22 @@ class SequentialStepSchedule(ScheduleBase):
                 return self.schedule_configs[i]
         return None
 
-    def _get_value(self, step: int, total_steps: int) -> float:
+    def _get_value(self, step: int, total_steps: int, abs_step: int = None) -> float:
         config = self.get_sequential_schedule_config(step)
         if config is None:
             # adjust step/total_steps within SequentialSchedule to step/total_steps within schedule
             adj_step = self.schedule_configs[0].start_step
             end_step = self.schedule_configs[0].end_step or total_steps
             adj_total_steps = end_step - adj_step
-            return self.schedule_configs[0].schedule.get_value(0, adj_total_steps)
+            return self.schedule_configs[0].schedule.get_value(0, adj_total_steps, 0)
         # adjust step/total_steps within SequentialSchedule to step/total_steps within schedule
         adj_step = step - config.start_step
         end_step = config.end_step or total_steps
         adj_total_steps = end_step - config.start_step
         if adj_step >= adj_total_steps:
             # return last value of previous schedule
-            return config.schedule.get_value(adj_total_steps - 1, adj_total_steps)
-        return config.schedule.get_value(adj_step, adj_total_steps)
+            return config.schedule.get_value(adj_total_steps - 1, adj_total_steps, end_step - 1)
+        return config.schedule.get_value(adj_step, adj_total_steps, step)
 
     def __str__(self):
         return "\n".join([

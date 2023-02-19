@@ -6,7 +6,7 @@ class DummySchedule(ScheduleBase):
         super().__init__()
         self.step_to_value = step_to_value
 
-    def _get_value(self, step: int, total_steps: int) -> float:
+    def _get_value(self, step: int, total_steps: int, abs_step: int = None) -> float:
         if self.step_to_value is None:
             return 0.
         return self.step_to_value[step]
