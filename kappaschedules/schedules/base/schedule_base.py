@@ -5,6 +5,8 @@ class ScheduleBase:
 
     def get_value(self, step: int, total_steps: int, abs_step: int = None) -> float:
         assert 0 <= step < total_steps, f"0 <= step < total_steps (step={step} total_steps={total_steps})"
+        if abs_step is None:
+            abs_step = total_steps
         return self._get_value(step, total_steps, abs_step)
 
     def _get_value(self, step: int, total_steps: int, abs_step: int = None) -> float:

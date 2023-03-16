@@ -83,18 +83,18 @@ class SequentialPercentSchedule(ScheduleBase):
             adj_step = int(total_steps * self.schedule_configs[0].start_percent)
             end_step = int(total_steps * self.schedule_configs[0].end_percent)
             adj_total_steps = end_step - adj_step
-            return self.schedule_configs[0].schedule.get_value(0, adj_total_steps, 0)
+            return self.schedule_configs[0].schedule.get_value(0, adj_total_steps, abs_step)
         # adjust step/total_steps within SequentialSchedule to step/total_steps within schedule
         start_step = int(total_steps * config.start_percent)
         adj_step = step - start_step
         end_step = int(total_steps * config.end_percent)
         adj_total_steps = end_step - start_step
         if adj_total_steps == 0:
-            return config.schedule.get_value(0, 1, 0)
+            return config.schedule.get_value(0, 1, abs_step)
         if adj_step >= adj_total_steps:
             # return last value of previous schedule
-            return config.schedule.get_value(adj_total_steps - 1, adj_total_steps, end_step - 1)
-        return config.schedule.get_value(adj_step, adj_total_steps, step)
+            return config.schedule.get_value(adj_total_steps - 1, adj_total_steps, abs_step)
+        return config.schedule.get_value(adj_step, adj_total_steps, abs_step)
 
     def __str__(self):
         return "\n".join([
