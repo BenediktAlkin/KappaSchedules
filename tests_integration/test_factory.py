@@ -10,8 +10,10 @@ class TestFactory(unittest.TestCase):
         self.assertIsInstance(ks.object_to_schedule(ks.LinearIncreasingSchedule()), ks.LinearIncreasingSchedule)
 
     def test_single(self):
-        sched = ks.object_to_schedule(dict(kind="linear_increasing_schedule"))
+        sched = ks.object_to_schedule(dict(kind="linear_increasing_schedule"), max_value=0.8)
         self.assertIsInstance(sched, ks.LinearIncreasingSchedule)
+        self.assertEqual(0.0, sched.start_value)
+        self.assertEqual(0.8, sched.delta)
 
     def test_sequential_unspecified(self):
         sched = ks.object_to_schedule([dict(schedule=dict(kind="linear_increasing_schedule"))])
@@ -38,6 +40,19 @@ class TestFactory(unittest.TestCase):
         ])
         self.assertIsInstance(sched, ks.SequentialPercentSchedule)
         self.assertIsInstance(sched.schedule_configs[0].schedule, ks.LinearIncreasingSchedule)
+
+    def test_sequential_percent_propagate_max_value(self):
+        sched = ks.object_to_schedule([
+            dict(schedule=dict(kind="linear_increasing_schedule"), end_percent=0.3),
+            dict(schedule=dict(kind="cosine_decreasing_schedule")),
+        ], max_value=0.8)
+        self.assertIsInstance(sched, ks.SequentialPercentSchedule)
+        self.assertIsInstance(sched.schedule_configs[0].schedule, ks.LinearIncreasingSchedule)
+        self.assertIsInstance(sched.schedule_configs[1].schedule, ks.CosineDecreasingSchedule)
+        self.assertEqual(0.0, sched.schedule_configs[0].schedule.start_value)
+        self.assertEqual(0.8, sched.schedule_configs[0].schedule.delta)
+        self.assertEqual(0.8, sched.schedule_configs[1].schedule.start_value)
+        self.assertEqual(-0.8, sched.schedule_configs[1].schedule.delta)
 
     def test_sequential_step(self):
         sched = ks.object_to_schedule([

@@ -9,7 +9,7 @@ from .schedules.base import ScheduleBase
 import inspect
 from copy import deepcopy
 
-def object_to_schedule(obj) -> ScheduleBase:
+def object_to_schedule(obj, **kwargs) -> ScheduleBase:
     if obj is None:
         return None
     if not isinstance(obj, (list, dict)):
@@ -42,9 +42,9 @@ def object_to_schedule(obj) -> ScheduleBase:
         schedule_configs = []
         for schedule_config in obj:
             assert "schedule" in schedule_config
-            schedule = object_to_schedule(schedule_config["schedule"])
-            kwargs = {k: v for k, v in schedule_config.items() if k != "schedule"}
-            schedule_configs.append(config_ctor(schedule=schedule, **kwargs))
+            schedule = object_to_schedule(schedule_config["schedule"], **kwargs)
+            cfg_kwargs = {k: v for k, v in schedule_config.items() if k != "schedule"}
+            schedule_configs.append(config_ctor(schedule=schedule, **cfg_kwargs))
         return ctor(schedule_configs)
 
     # single schedules
@@ -69,7 +69,7 @@ def object_to_schedule(obj) -> ScheduleBase:
     elif ctor == SequentialStepSchedule:
         obj["schedule_configs"] = _obj_to_schedule_configs(obj["schedule_configs"], SequentialStepScheduleConfig)
 
-    return ctor(**obj)
+    return ctor(**obj, **kwargs)
 
 def _obj_to_schedule_configs(obj, config_ctor):
     schedule_configs = []
