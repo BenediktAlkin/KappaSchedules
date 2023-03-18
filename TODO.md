@@ -1,2 +1,3 @@
 - abs_step is never propagated in sequential schedules
 - test epoch/update/sample based validation in factory
+- when step/percentage schedules are mixed -> convert percentage to step schedules
