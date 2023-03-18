@@ -9,12 +9,13 @@ from .schedules.base import ScheduleBase
 import inspect
 from copy import deepcopy
 
-def object_to_schedule(obj, **kwargs) -> ScheduleBase:
+def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -> ScheduleBase:
     if obj is None:
         return None
     if not isinstance(obj, (list, dict)):
         assert isinstance(obj, ScheduleBase)
         return obj
+    obj = deepcopy(obj)
 
     # implicit sequential schedule
     if isinstance(obj, list):
@@ -23,10 +24,76 @@ def object_to_schedule(obj, **kwargs) -> ScheduleBase:
         percent_counts = 0
         for schedule_config in obj:
             assert isinstance(schedule_config, dict)
-            if "start_step" in schedule_config or "end_step" in schedule_config:
+            if "start_step" in schedule_config:
                 step_counts += 1
-            elif "start_percent" in schedule_config or "end_percent" in schedule_config:
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["start_epoch", "start_update", "start_sample", "start_percent"]
+                )
+            elif "end_step" in schedule_config:
+                step_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["end_epoch", "end_update", "end_sample", "end_percent"]
+                )
+            if "start_epoch" in schedule_config:
+                step_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["start_step", "start_update", "start_sample", "start_percent"]
+                )
+                assert updates_per_epoch is not None
+                schedule_config["start_step"] = schedule_config.pop("start_epoch") * updates_per_epoch
+            elif "end_epoch" in schedule_config:
+                step_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["end_step", "end_update", "end_sample", "end_percent"]
+                )
+                assert updates_per_epoch is not None
+                schedule_config["end_step"] = schedule_config.pop("end_epoch") * updates_per_epoch
+            if "start_update" in schedule_config:
+                step_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["start_step", "start_epoch", "start_sample", "start_percent"]
+                )
+                schedule_config["start_step"] = schedule_config.pop("start_update")
+            elif "end_update" in schedule_config:
+                step_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["end_step", "end_epoch", "end_sample", "end_percent"]
+                )
+                schedule_config["end_step"] = schedule_config.pop("end_update")
+            if "start_epoch" in schedule_config:
+                step_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["start_step", "start_update", "start_sample", "start_percent"]
+                )
+                assert batch_size is not None
+                schedule_config["start_step"] = int(schedule_config.pop("start_sample") / batch_size)
+            elif "end_sample" in schedule_config:
+                step_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["end_step", "end_epoch", "end_update", "end_percent"]
+                )
+                assert batch_size is not None
+                schedule_config["end_step"] = int(schedule_config.pop("end_sample") / batch_size)
+            elif "start_percent" in schedule_config:
                 percent_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["start_step", "start_epoch", "start_update", "start_sample"]
+                )
+            elif "end_percent" in schedule_config:
+                percent_counts += 1
+                _check_mutually_exclusive_keys(
+                    schedule_config=schedule_config,
+                    forbidden_keys=["end_step", "end_epoch", "end_update", "end_sample"]
+                )
         # if no start/end points are specified -> use step version
         if (step_counts == 0 and percent_counts == 0) or step_counts > 0:
             assert percent_counts == 0
@@ -49,7 +116,6 @@ def object_to_schedule(obj, **kwargs) -> ScheduleBase:
 
     # single schedules
     assert "kind" in obj and isinstance(obj["kind"], str)
-    obj = deepcopy(obj)
     kind = obj.pop("kind")
 
     # get all names and ctors of schedules
@@ -70,6 +136,10 @@ def object_to_schedule(obj, **kwargs) -> ScheduleBase:
         obj["schedule_configs"] = _obj_to_schedule_configs(obj["schedule_configs"], SequentialStepScheduleConfig)
 
     return ctor(**obj, **kwargs)
+
+def _check_mutually_exclusive_keys(schedule_config, forbidden_keys):
+    for key in schedule_config.keys():
+        assert key not in forbidden_keys, f"{key} is mutually exclusive to {forbidden_keys}"
 
 def _obj_to_schedule_configs(obj, config_ctor):
     schedule_configs = []
