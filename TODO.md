@@ -1,3 +1,5 @@
+- percentage sequential schedule is buggy where from wupcos on the first value of the cosine schedule is omitted
+  - instead the last value of the linear schedule is copied
 - abs_step is never propagated in sequential schedules
 - test epoch/update/sample based validation in factory
 - when step/percentage schedules are mixed -> convert percentage to step schedules
