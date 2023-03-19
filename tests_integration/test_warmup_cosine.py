@@ -17,7 +17,7 @@ class TestWarmupCosine(unittest.TestCase):
         values = [sched.get_value(i, total_steps) for i in range(total_steps)]
         assertIsClose(self, [0.2, 0.4, 0.6, 0.8, 1.0, 0.933, 0.75, 0.5, 0.25, 0.067], values)
 
-    def test_percent_zero_to_one(self):
+    def test_percent_zero_to_one_imperfect_split(self):
         sched = ks.SequentialPercentSchedule([
             ks.SequentialPercentScheduleConfig(
                 # percentages are from 0 to 100 -> end_percent 0.4 would not correspond to end_step=4
@@ -31,6 +31,18 @@ class TestWarmupCosine(unittest.TestCase):
         total_steps = 10
         values = [sched.get_value(i, total_steps) for i in range(total_steps)]
         assertIsClose(self, [0.2, 0.4, 0.6, 0.8, 1.0, 0.933, 0.75, 0.5, 0.25, 0.067], values)
+
+    def test_percent_zero_to_one_perfect_split(self):
+        sched = ks.SequentialPercentSchedule([
+            ks.SequentialPercentScheduleConfig(
+                end_percent=0.4,
+                schedule=ks.LinearIncreasingSchedule(exclude_first=True, exclude_last=True),
+            ),
+            ks.SequentialPercentScheduleConfig(schedule=ks.CosineDecreasingSchedule(exclude_last=True)),
+        ])
+        total_steps = 11
+        values = [sched.get_value(i, total_steps) for i in range(total_steps)]
+        assertIsClose(self, [0.2, 0.4, 0.6, 0.8, 1.0, 0.9505, 0.8117, 0.6113, 0.3887, 0.1883, 0.0495], values)
 
     def test_percent_equal_to_step(self):
         percent = ks.SequentialPercentSchedule([
