@@ -132,10 +132,10 @@ class TestSequentialStepSchedule(unittest.TestCase):
             ),
         ])
         for i in range(4):
-            self.assertEqual(0.1, sched.get_value(i, 10))
-        self.assertEqual(0.2, sched.get_value(4, 10))
-        for i in range(5, 10):
-            self.assertEqual(0.2, sched.get_value(i, 10))
+            self.assertEqual(0.1, sched.get_value(i, 11))
+        self.assertEqual(0.2, sched.get_value(4, 11))
+        for i in range(5, 11):
+            self.assertEqual(0.2, sched.get_value(i, 11))
 
     def test_tostring(self):
         sched = SequentialStepSchedule([
