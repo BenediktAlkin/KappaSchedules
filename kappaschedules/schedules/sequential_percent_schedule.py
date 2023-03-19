@@ -68,26 +68,30 @@ class SequentialPercentSchedule(ScheduleBase):
                 assert 0. <= schedule_configs[-1].start_percent <= schedule_configs[-1].end_percent <= 1.
 
     def get_sequential_schedule_config(self, step: int, total_steps: int) -> SequentialPercentScheduleConfig:
-        percent = step / (total_steps - 1)
+        total_steps_m1 = total_steps - 1
         # percent < config[0].start_percent -> None
         # config[-1].end_percent < percent -> config[-1]
         for i in reversed(range(len(self.schedule_configs))):
-            if self.schedule_configs[i].start_percent <= percent:
+            if int(self.schedule_configs[i].start_percent * total_steps_m1) <= step:
                 return self.schedule_configs[i]
         return None
 
     def _get_value(self, step: int, total_steps: int, abs_step: int = None) -> float:
         config = self.get_sequential_schedule_config(step, total_steps)
+        total_steps_m1 = total_steps - 1
         if config is None:
             # adjust step/total_steps within SequentialSchedule to step/total_steps within schedule
-            adj_step = int(total_steps * self.schedule_configs[0].start_percent)
-            end_step = int(total_steps * self.schedule_configs[0].end_percent)
+            adj_step = int(total_steps_m1 * self.schedule_configs[0].start_percent)
+            if self.schedule_configs[0].end_percent == 1.:
+                end_step = total_steps
+            else:
+                end_step = int(total_steps_m1 * self.schedule_configs[0].end_percent)
             adj_total_steps = end_step - adj_step
             return self.schedule_configs[0].schedule.get_value(0, adj_total_steps, 0)
         # adjust step/total_steps within SequentialSchedule to step/total_steps within schedule
-        start_step = int(total_steps * config.start_percent)
+        start_step = int(total_steps_m1 * config.start_percent)
         adj_step = step - start_step
-        end_step = int(total_steps * config.end_percent)
+        end_step = total_steps if config.end_percent == 1. else int(total_steps_m1 * config.end_percent)
         adj_total_steps = end_step - start_step
         if adj_total_steps == 0:
             return config.schedule.get_value(0, 1, 0)
