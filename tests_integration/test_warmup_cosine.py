@@ -20,7 +20,10 @@ class TestWarmupCosine(unittest.TestCase):
     def test_percent_zero_to_one(self):
         sched = ks.SequentialPercentSchedule([
             ks.SequentialPercentScheduleConfig(
-                end_percent=0.4,
+                # percentages are from 0 to 100 -> end_percent 0.4 would not correspond to end_step=4
+                # end_step = end_percent * (total_steps - 1)
+                # 4.05 = 0.45 * (10 - 1)
+                end_percent=0.45,
                 schedule=ks.LinearIncreasingSchedule(exclude_first=True, exclude_last=True),
             ),
             ks.SequentialPercentScheduleConfig(schedule=ks.CosineDecreasingSchedule(exclude_last=True)),
