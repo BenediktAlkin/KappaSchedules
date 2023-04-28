@@ -135,6 +135,10 @@ def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -
     elif ctor == SequentialStepSchedule:
         obj["schedule_configs"] = _obj_to_schedule_configs(obj["schedule_configs"], SequentialStepScheduleConfig)
 
+    # remove min_value/max_value if schedule doesn't need it (e.g. ConstantSchedule)
+    if "max_value" in kwargs and "max_value" not in inspect.signature(ctor).parameters.keys():
+        kwargs = {k: v for k, v in kwargs.items() if k != "max_value"}
+
     return ctor(**obj, **kwargs)
 
 def _check_mutually_exclusive_keys(schedule_config, forbidden_keys):

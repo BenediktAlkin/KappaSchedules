@@ -64,6 +64,19 @@ class TestFactory(unittest.TestCase):
         self.assertIsInstance(sched, ks.SequentialStepSchedule)
         self.assertIsInstance(sched.schedule_configs[0].schedule, ks.LinearIncreasingSchedule)
 
+    def test_sequential_constant_maxvalue(self):
+        sched = ks.object_to_schedule(
+            [
+                dict(
+                    schedule=dict(kind="constant_schedule", value=0.1),
+                    end_step=2,
+                ),
+            ],
+            max_value=0.1,
+        )
+        self.assertIsInstance(sched, ks.SequentialStepSchedule)
+        self.assertIsInstance(sched.schedule_configs[0].schedule, ks.ConstantSchedule)
+
     def test_explicit_sequential_percent(self):
         sched = ks.object_to_schedule(dict(
             kind="sequential_percent_schedule",
