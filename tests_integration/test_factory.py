@@ -96,3 +96,12 @@ class TestFactory(unittest.TestCase):
         ))
         self.assertIsInstance(sched, ks.SequentialStepSchedule)
         self.assertIsInstance(sched.schedule_configs[0].schedule, ks.LinearIncreasingSchedule)
+
+    def test_periodic_bool_schedule(self):
+        sched = ks.object_to_schedule(
+            dict(
+                kind="periodic_bool_schedule",
+                initial_state=True,
+            ),
+        )
+        self.assertIsInstance(sched, ks.PeriodicBoolSchedule)
