@@ -1,8 +1,11 @@
+from .base.schedule_base import ScheduleBase
 from .constant_schedule import ConstantSchedule
 from .cosine_decreasing_schedule import CosineDecreasingSchedule
 from .cosine_increasing_schedule import CosineIncreasingSchedule
 from .linear_decreasing_schedule import LinearDecreasingSchedule
 from .linear_increasing_schedule import LinearIncreasingSchedule
+from .polynomial_decreasing_schedule import PolynomialDecreasingSchedule
+from .polynomial_increasing_schedule import PolynomialIncreasingSchedule
 from .periodic_bool_schedule import PeriodicBoolSchedule
 from .sequential_percent_schedule import SequentialPercentSchedule, SequentialPercentScheduleConfig
 from .sequential_step_schedule import SequentialStepSchedule, SequentialStepScheduleConfig
