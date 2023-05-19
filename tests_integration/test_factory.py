@@ -105,3 +105,19 @@ class TestFactory(unittest.TestCase):
             ),
         )
         self.assertIsInstance(sched, ks.PeriodicBoolSchedule)
+
+    def test_sequential_include_maxvalue_when_ctor_is_overridden(self):
+        sched = ks.object_to_schedule(
+            [
+                dict(
+                    schedule=dict(
+                        kind="polynomial_decreasing_schedule",
+                        power=1.0,
+                    ),
+                ),
+            ],
+            max_value=0.1,
+        )
+        self.assertIsInstance(sched, ks.SequentialStepSchedule)
+        self.assertIsInstance(sched.schedule_configs[0].schedule, ks.PolynomialDecreasingSchedule)
+        self.assertEqual(-0.1, sched.schedule_configs[0].schedule.delta)
