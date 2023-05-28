@@ -4,8 +4,13 @@ from kappaschedules.schedules.periodic_bool_schedule import PeriodicBoolSchedule
 
 
 class TestPeriodicBoolSchedule(unittest.TestCase):
-    def _test(self, expected, initial_state, on_duration, off_duration):
-        sched = PeriodicBoolSchedule(initial_state=initial_state, on_duration=on_duration, off_duration=off_duration)
+    def _test(self, expected, initial_state, on_duration, off_duration, invert=False):
+        sched = PeriodicBoolSchedule(
+            initial_state=initial_state,
+            on_duration=on_duration,
+            off_duration=off_duration,
+            invert=invert,
+        )
         actual = [sched.get_value(step=i, total_steps=len(expected)) for i in range(len(expected))]
         self.assertEqual(expected, actual)
 
@@ -56,3 +61,13 @@ class TestPeriodicBoolSchedule(unittest.TestCase):
             on_duration=3,
             off_duration=4,
         )
+
+    def test_invert(self):
+        self._test(
+            expected=[1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
+            initial_state=False,
+            on_duration=3,
+            off_duration=4,
+            invert=True,
+        )
+
