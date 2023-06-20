@@ -1,7 +1,7 @@
 import unittest
 
 from kappaschedules.schedules.periodic_bool_schedule import PeriodicBoolSchedule
-
+from kappaschedules.factory import object_to_schedule
 
 class TestPeriodicBoolSchedule(unittest.TestCase):
     def _test(self, expected, initial_state, on_duration, off_duration, on_value=None, off_value=None, invert=False):
@@ -95,3 +95,16 @@ class TestPeriodicBoolSchedule(unittest.TestCase):
             invert=True,
         )
 
+    def test_factory_set_onvalue_with_maxvalue(self):
+        schedule = object_to_schedule(
+            dict(
+                kind="periodic_bool_schedule",
+                initial_state=False,
+                on_duration=2,
+                off_duration=1,
+                invert=True,
+            ),
+            max_value=0.75,
+        )
+        self.assertIsInstance(schedule, PeriodicBoolSchedule)
+        self.assertEqual(0.75, schedule.on_value)
