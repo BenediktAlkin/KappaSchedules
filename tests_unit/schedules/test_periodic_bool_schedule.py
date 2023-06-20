@@ -4,12 +4,18 @@ from kappaschedules.schedules.periodic_bool_schedule import PeriodicBoolSchedule
 
 
 class TestPeriodicBoolSchedule(unittest.TestCase):
-    def _test(self, expected, initial_state, on_duration, off_duration, invert=False):
+    def _test(self, expected, initial_state, on_duration, off_duration, on_value=None, off_value=None, invert=False):
+        kwargs = {}
+        if on_value is not None:
+            kwargs["on_value"] = on_value
+        if off_value is not None:
+            kwargs["off_value"] = off_value
         sched = PeriodicBoolSchedule(
             initial_state=initial_state,
             on_duration=on_duration,
             off_duration=off_duration,
             invert=invert,
+            **kwargs,
         )
         actual = [sched.get_value(step=i, total_steps=len(expected)) for i in range(len(expected))]
         self.assertEqual(expected, actual)
@@ -28,6 +34,24 @@ class TestPeriodicBoolSchedule(unittest.TestCase):
             initial_state=True,
             on_duration=1,
             off_duration=1,
+        )
+
+    def test_on1_off1_onvalue075(self):
+        self._test(
+            expected=[0.75, 0, 0.75, 0, 0.75, 0],
+            initial_state=True,
+            on_duration=1,
+            off_duration=1,
+            on_value=0.75,
+        )
+
+    def test_on1_off1_offvalue025(self):
+        self._test(
+            expected=[1, 0.25, 1, 0.25, 1, 0.25],
+            initial_state=True,
+            on_duration=1,
+            off_duration=1,
+            off_value=0.25,
         )
 
     def test_on1_off0(self):

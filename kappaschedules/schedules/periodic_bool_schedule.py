@@ -2,9 +2,11 @@ from .base import ScheduleBase
 
 
 class PeriodicBoolSchedule(ScheduleBase):
-    def __init__(self, initial_state, off_duration=1, on_duration=1, invert=False):
+    def __init__(self, initial_state, off_value=0., on_value=1., off_duration=1, on_duration=1, invert=False):
         super().__init__()
         self.initial_state = initial_state
+        self.off_value = off_value
+        self.on_value = on_value
         self.off_duration = off_duration
         self.on_duration = on_duration
         self.period_duration = off_duration + on_duration
@@ -31,11 +33,11 @@ class PeriodicBoolSchedule(ScheduleBase):
         step_in_period = step % self.period_duration
         if self.initial_state:
             if step_in_period < self.on_duration:
-                return 1.
+                return self.on_value
             else:
-                return 0.
+                return self.off_value
         else:
             if step_in_period < self.off_duration:
-                return 0.
+                return self.off_value
             else:
-                return 1.
+                return self.on_value
