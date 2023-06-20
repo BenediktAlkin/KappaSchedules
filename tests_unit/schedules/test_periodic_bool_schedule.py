@@ -36,24 +36,6 @@ class TestPeriodicBoolSchedule(unittest.TestCase):
             off_duration=1,
         )
 
-    def test_on1_off1_onvalue075(self):
-        self._test(
-            expected=[0.75, 0, 0.75, 0, 0.75, 0],
-            initial_state=True,
-            on_duration=1,
-            off_duration=1,
-            on_value=0.75,
-        )
-
-    def test_on1_off1_offvalue025(self):
-        self._test(
-            expected=[1, 0.25, 1, 0.25, 1, 0.25],
-            initial_state=True,
-            on_duration=1,
-            off_duration=1,
-            off_value=0.25,
-        )
-
     def test_on1_off0(self):
         self._test(
             expected=[1, 1, 1, 1, 1, 1, 1],
@@ -94,17 +76,3 @@ class TestPeriodicBoolSchedule(unittest.TestCase):
             off_duration=4,
             invert=True,
         )
-
-    def test_factory_set_onvalue_with_maxvalue(self):
-        schedule = object_to_schedule(
-            dict(
-                kind="periodic_bool_schedule",
-                initial_state=False,
-                on_duration=2,
-                off_duration=1,
-                invert=True,
-            ),
-            max_value=0.75,
-        )
-        self.assertIsInstance(schedule, PeriodicBoolSchedule)
-        self.assertEqual(0.75, schedule.on_value)

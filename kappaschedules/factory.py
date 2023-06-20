@@ -4,7 +4,6 @@ from .schedules import (
     SequentialPercentScheduleConfig,
     SequentialStepSchedule,
     SequentialStepScheduleConfig,
-    PeriodicBoolSchedule,
 )
 from .schedules.base import ScheduleBase
 import inspect
@@ -138,11 +137,7 @@ def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -
 
     # remove min_value/max_value if schedule doesn't need it (e.g. ConstantSchedule)
     if "max_value" in kwargs and "max_value" not in _get_full_signature(ctor):
-        max_value = kwargs["max_value"]
         kwargs = {k: v for k, v in kwargs.items() if k != "max_value"}
-        # if PeriodicBoolSchedule -> use max_value as on_value
-        if ctor == PeriodicBoolSchedule:
-            kwargs["on_value"] = max_value
 
     return ctor(**obj, **kwargs)
 
