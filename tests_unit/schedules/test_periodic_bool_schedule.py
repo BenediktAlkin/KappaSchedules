@@ -68,11 +68,20 @@ class TestPeriodicBoolSchedule(unittest.TestCase):
             off_duration=4,
         )
 
-    def test_invert(self):
+    def test_off3_on4_invert(self):
         self._test(
             expected=[1, 1, 1, 1, 0, 0, 0, 1, 1, 1, 1, 0, 0, 0],
             initial_state=False,
             on_duration=3,
             off_duration=4,
+            invert=True,
+        )
+
+    def test_on4_off3_invert(self):
+        self._test(
+            expected=[0, 0, 0, 0, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1],
+            initial_state=True,
+            on_duration=4,
+            off_duration=3,
             invert=True,
         )
