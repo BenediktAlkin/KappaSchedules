@@ -1,3 +1,10 @@
+- max_value is currently misused
+  - start_value: where does the schedule start
+  - end_value: where does the schedule end
+  - min_value: result is never smaller than this
+  - max_value: result is never larger than this
+  
+- 
 - percentage sequential schedule is buggy where from wupcos on the first value of the cosine schedule is omitted
   - instead the last value of the linear schedule is copied
 - abs_step is never propagated in sequential schedules
