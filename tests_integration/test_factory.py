@@ -2,6 +2,7 @@ import unittest
 
 import kappaschedules as ks
 
+
 class TestFactory(unittest.TestCase):
     def test_none(self):
         self.assertIsNone(ks.object_to_schedule(None))

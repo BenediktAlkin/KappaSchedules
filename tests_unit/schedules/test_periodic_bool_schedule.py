@@ -1,7 +1,7 @@
 import unittest
 
 from kappaschedules.schedules.periodic_bool_schedule import PeriodicBoolSchedule
-from kappaschedules.factory import object_to_schedule
+
 
 class TestPeriodicBoolSchedule(unittest.TestCase):
     def _test(self, expected, initial_state, on_duration, off_duration, on_value=None, off_value=None, invert=False):

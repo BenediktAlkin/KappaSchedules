@@ -23,4 +23,3 @@ class TestCosineDecreasingSchedule(unittest.TestCase):
         ]
         actual = [sched.get_value(step, total_steps=11) for step in range(11)]
         self.assertTrue(np.allclose(expected, actual), actual)
-

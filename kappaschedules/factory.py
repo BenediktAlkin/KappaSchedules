@@ -1,3 +1,6 @@
+import inspect
+from copy import deepcopy
+
 import kappaschedules.schedules
 from .schedules import (
     SequentialPercentSchedule,
@@ -6,8 +9,7 @@ from .schedules import (
     SequentialStepScheduleConfig,
 )
 from .schedules.base import ScheduleBase
-import inspect
-from copy import deepcopy
+
 
 def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -> ScheduleBase:
     if obj is None:
@@ -141,6 +143,7 @@ def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -
 
     return ctor(**obj, **kwargs)
 
+
 def _get_full_signature(cls):
     signature = set(inspect.signature(cls.__init__).parameters.keys())
     if cls.__base__ != object:
@@ -149,9 +152,11 @@ def _get_full_signature(cls):
         signature = base_signature
     return signature
 
+
 def _check_mutually_exclusive_keys(schedule_config, forbidden_keys):
     for key in schedule_config.keys():
         assert key not in forbidden_keys, f"{key} is mutually exclusive to {forbidden_keys}"
+
 
 def _obj_to_schedule_configs(obj, config_ctor):
     schedule_configs = []

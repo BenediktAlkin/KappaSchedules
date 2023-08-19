@@ -1,5 +1,6 @@
 from dataclasses import dataclass
 from typing import List
+
 from .base import ScheduleBase
 
 
@@ -44,7 +45,6 @@ class SequentialPercentSchedule(ScheduleBase):
         # set [-1].end_percent to 1.
         if schedule_configs[-1].end_percent is None:
             schedule_configs[-1].end_percent = 1.
-
 
         # check correctness of start/end
         if len(schedule_configs) == 1:
