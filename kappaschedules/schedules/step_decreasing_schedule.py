@@ -13,4 +13,4 @@ class StepDecreasingSchedule(DecreasingProgressSchedule):
         progress = step / total_steps
         # round to 10th decimal place to avoid floating point precision errors
         step_idx = int(round(progress / self.interval, 10))
-        return self.factor ** step_idx
+        return 1 - self.factor ** step_idx
