@@ -11,5 +11,6 @@ from .polynomial_decreasing_schedule import PolynomialDecreasingSchedule
 from .polynomial_increasing_schedule import PolynomialIncreasingSchedule
 from .sequential_percent_schedule import SequentialPercentSchedule, SequentialPercentScheduleConfig
 from .sequential_step_schedule import SequentialStepSchedule, SequentialStepScheduleConfig
+from .step_decreasing_schedule import StepDecreasingSchedule
 from .step_fixed_schedule import StepFixedSchedule
 from .step_interval_schedule import StepIntervalSchedule
