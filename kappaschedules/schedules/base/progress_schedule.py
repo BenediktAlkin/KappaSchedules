@@ -2,8 +2,8 @@ from .schedule_base import ScheduleBase
 
 
 class ProgressSchedule(ScheduleBase):
-    def __init__(self, start_value, delta, exclude_first=False, exclude_last=False):
-        super().__init__()
+    def __init__(self, start_value, delta, exclude_first=False, exclude_last=False, **kwargs):
+        super().__init__(**kwargs)
         self.start_value = start_value
         self.delta = delta
         self.exclude_first = exclude_first

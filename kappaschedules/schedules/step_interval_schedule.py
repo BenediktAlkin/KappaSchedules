@@ -2,8 +2,8 @@ from .base import ScheduleBase
 
 
 class StepIntervalSchedule(ScheduleBase):
-    def __init__(self, start_value, factor, interval):
-        super().__init__()
+    def __init__(self, start_value, factor, interval, **kwargs):
+        super().__init__(**kwargs)
         assert isinstance(interval, (int, float)) and 0. < interval < 1.
         self.start_value = start_value
         self.factor = factor

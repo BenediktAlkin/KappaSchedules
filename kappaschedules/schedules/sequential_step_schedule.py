@@ -18,8 +18,8 @@ class SequentialStepScheduleConfig:
 
 
 class SequentialStepSchedule(ScheduleBase):
-    def __init__(self, schedule_configs: List[SequentialStepScheduleConfig]):
-        super().__init__()
+    def __init__(self, schedule_configs: List[SequentialStepScheduleConfig], **kwargs):
+        super().__init__(**kwargs)
         assert len(schedule_configs) > 0
         self.schedule_configs = schedule_configs
 

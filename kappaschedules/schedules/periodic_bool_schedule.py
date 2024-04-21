@@ -2,8 +2,17 @@ from .base import ScheduleBase
 
 
 class PeriodicBoolSchedule(ScheduleBase):
-    def __init__(self, initial_state, off_value=0., on_value=1., off_duration=1, on_duration=1, invert=False):
-        super().__init__()
+    def __init__(
+            self,
+            initial_state,
+            off_value=0.,
+            on_value=1.,
+            off_duration=1,
+            on_duration=1,
+            invert=False,
+            **kwargs,
+    ):
+        super().__init__(**kwargs)
         self.initial_state = initial_state
         self.off_duration = off_duration
         self.on_duration = on_duration

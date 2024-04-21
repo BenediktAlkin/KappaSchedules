@@ -2,8 +2,8 @@ from .base import ScheduleBase
 
 
 class ConstantSchedule(ScheduleBase):
-    def __init__(self, value):
-        super().__init__()
+    def __init__(self, value, **kwargs):
+        super().__init__(**kwargs)
         self.value = value
 
     def __str__(self):

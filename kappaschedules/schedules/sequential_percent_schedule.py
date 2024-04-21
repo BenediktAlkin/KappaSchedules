@@ -18,8 +18,8 @@ class SequentialPercentScheduleConfig:
 
 
 class SequentialPercentSchedule(ScheduleBase):
-    def __init__(self, schedule_configs: List[SequentialPercentScheduleConfig]):
-        super().__init__()
+    def __init__(self, schedule_configs: List[SequentialPercentScheduleConfig], **kwargs):
+        super().__init__(**kwargs)
         assert len(schedule_configs) > 0
         self.schedule_configs = schedule_configs
 

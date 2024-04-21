@@ -2,8 +2,8 @@ from .base import ScheduleBase
 
 
 class StepFixedSchedule(ScheduleBase):
-    def __init__(self, start_value: float, factor: float, steps: list):
-        super().__init__()
+    def __init__(self, start_value: float, factor: float, steps: list, **kwargs):
+        super().__init__(**kwargs)
         assert isinstance(steps, list) and len(steps) > 0
         self.steps = sorted(steps)
         assert all(0. < step < 1 for step in self.steps)
