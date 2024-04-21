@@ -2,10 +2,12 @@ from .base.schedule_base import ScheduleBase
 from .constant_schedule import ConstantSchedule
 from .cosine_decreasing_schedule import CosineDecreasingSchedule
 from .cosine_increasing_schedule import CosineIncreasingSchedule
+from .custom_schedule import CustomSchedule
 from .inverse_sqrt_decreasing_schedule import InverseSqrtDecreasingSchedule
 from .inverse_sqrt_increasing_schedule import InverseSqrtIncreasingSchedule
 from .linear_decreasing_schedule import LinearDecreasingSchedule
 from .linear_increasing_schedule import LinearIncreasingSchedule
+from .linear_warmup_cosine_decay import LinearWarmupCosineDecay
 from .periodic_bool_schedule import PeriodicBoolSchedule
 from .polynomial_decreasing_schedule import PolynomialDecreasingSchedule
 from .polynomial_increasing_schedule import PolynomialIncreasingSchedule
