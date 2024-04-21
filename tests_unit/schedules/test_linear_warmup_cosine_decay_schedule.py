@@ -1,10 +1,9 @@
 import unittest
 
 import numpy as np
-import torch
 
-from kappaschedules.schedules import LinearWarmupCosineDecaySchedule
 from kappaschedules.factory import object_to_schedule
+
 
 class TestLinearWarmupCosineDecaySchedule(unittest.TestCase):
     def test_factory_percent(self):
