@@ -7,7 +7,7 @@ from kappaschedules.schedules import CustomSchedule
 
 
 class TestCustomSchedule(unittest.TestCase):
-    def test_decreasing(self):
+    def test(self):
         values = torch.rand(size=(11,), generator=torch.Generator().manual_seed(94)).tolist()
         sched = CustomSchedule(values=values)
         actual = [sched.get_value(step, total_steps=11) for step in range(11)]

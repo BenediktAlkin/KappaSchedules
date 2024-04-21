@@ -1,4 +1,5 @@
 import inspect
+import math
 from copy import deepcopy
 
 import kappaschedules.schedules
@@ -75,7 +76,7 @@ def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -
                     forbidden_keys=["start_step", "start_update", "start_sample", "start_percent"]
                 )
                 assert batch_size is not None
-                schedule_config["start_step"] = int(schedule_config.pop("start_sample") / batch_size)
+                schedule_config["start_step"] = math.ceil(schedule_config.pop("start_sample") / batch_size)
             elif "end_sample" in schedule_config:
                 step_counts += 1
                 _check_mutually_exclusive_keys(
@@ -83,7 +84,7 @@ def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -
                     forbidden_keys=["end_step", "end_epoch", "end_update", "end_percent"]
                 )
                 assert batch_size is not None
-                schedule_config["end_step"] = int(schedule_config.pop("end_sample") / batch_size)
+                schedule_config["end_step"] = math.ceil(schedule_config.pop("end_sample") / batch_size)
             elif "start_percent" in schedule_config:
                 percent_counts += 1
                 _check_mutually_exclusive_keys(
@@ -120,6 +121,30 @@ def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -
     assert "kind" in obj and isinstance(obj["kind"], str)
     kind = obj.pop("kind")
 
+    # replace kwargs with "_epochs" in them with steps based on updates_per_epoch
+    for key in list(obj.keys()):
+        if "_epochs" in key:
+            new_key = key.replace("_epochs", "_steps")
+            assert updates_per_epoch is not None, f"updates_per_epoch is required to convert {key} to {new_key}"
+            value = obj.pop(key)
+            new_value = value * updates_per_epoch
+            obj[new_key] = new_value
+
+    # replace kwargs with "_updates" in them with steps
+    for key in list(obj.keys()):
+        if "_updates" in key:
+            new_key = key.replace("_updates", "_steps")
+            obj[new_key] = obj.pop(key)
+
+    # replace kwargs with "_samples" in them with steps based on batch_size
+    for key in list(obj.keys()):
+        if "_samples" in key:
+            new_key = key.replace("_samples", "_steps")
+            assert batch_size is not None, f"batch_size is required to convert {key} to {new_key}"
+            value = obj.pop(key)
+            new_value = math.ceil(value / batch_size)
+            obj[new_key] = new_value
+
     # get all names and ctors of schedules
     pascal_ctor_list = inspect.getmembers(kappaschedules.schedules, inspect.isclass)
     pascal_to_ctor = {name: ctor for name, ctor in pascal_ctor_list}
@@ -127,7 +152,7 @@ def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -
     if kind[0].islower:
         kind = kind.replace("_", "")
         snake_to_pascal = {name.lower(): name for name in pascal_to_ctor.keys()}
-        assert kind in snake_to_pascal.keys(), f"invalid kind '{kind}' (possibilities: {snake_to_pascal.keys()})"
+        assert kind in snake_to_pascal.keys(), f"invalid kind '{kind}' (possibilities: {list(snake_to_pascal.keys())})"
         kind = snake_to_pascal[kind]
     ctor = pascal_to_ctor[kind]
 

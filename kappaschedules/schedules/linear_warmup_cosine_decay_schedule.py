@@ -5,7 +5,7 @@ from .sequential_percent_schedule import SequentialPercentSchedule, SequentialPe
 from .sequential_step_schedule import SequentialStepSchedule, SequentialStepScheduleConfig
 
 
-class LinearWarmupCosineDecay(ScheduleBase):
+class LinearWarmupCosineDecaySchedule(ScheduleBase):
     def __init__(self, warmup_steps=None, warmup_percent=None, start_value=0., end_value=1e-6, **kwargs):
         super().__init__(**kwargs)
         assert (warmup_steps is None) ^ (warmup_percent is None), f"define one of warmup_steps or warmup_percent"
@@ -16,7 +16,7 @@ class LinearWarmupCosineDecay(ScheduleBase):
                 schedule_configs=[
                     SequentialStepScheduleConfig(
                         schedule=LinearIncreasingSchedule(
-                            exclude_first=start_value is None,
+                            exclude_first=start_value == 0,
                             exclude_last=True,
                             start_value=start_value,
                         ),
@@ -36,7 +36,7 @@ class LinearWarmupCosineDecay(ScheduleBase):
                 schedule_configs=[
                     SequentialPercentScheduleConfig(
                         schedule=LinearIncreasingSchedule(
-                            exclude_first=start_value > 0,
+                            exclude_first=start_value == 0,
                             exclude_last=True,
                             start_value=start_value,
                         ),
