@@ -6,7 +6,15 @@ from .sequential_step_schedule import SequentialStepSchedule, SequentialStepSche
 
 
 class LinearWarmupCosineDecaySchedule(ScheduleBase):
-    def __init__(self, warmup_steps=None, warmup_percent=None, start_value=0., end_value=1e-6, **kwargs):
+    def __init__(
+            self,
+            warmup_steps=None,
+            warmup_percent=None,
+            start_value=0.,
+            max_value=1.0,
+            end_value=1e-6,
+            **kwargs,
+    ):
         super().__init__(**kwargs)
         assert (warmup_steps is None) ^ (warmup_percent is None), f"define one of warmup_steps or warmup_percent"
         self.warmup_steps = warmup_steps
@@ -19,6 +27,7 @@ class LinearWarmupCosineDecaySchedule(ScheduleBase):
                             exclude_first=start_value == 0,
                             exclude_last=True,
                             start_value=start_value,
+                            max_value=max_value,
                         ),
                         end_step=warmup_steps,
                     ),
@@ -26,6 +35,7 @@ class LinearWarmupCosineDecaySchedule(ScheduleBase):
                         schedule=CosineDecreasingSchedule(
                             exclude_first=False,
                             exclude_last=False,
+                            max_value=max_value,
                             end_value=end_value,
                         ),
                     ),
