@@ -8,6 +8,8 @@ from .schedules import (
     SequentialPercentScheduleConfig,
     SequentialStepSchedule,
     SequentialStepScheduleConfig,
+    ConstantSchedule,
+    CustomSchedule,
 )
 from .schedules.base import ScheduleBase
 
@@ -15,6 +17,10 @@ from .schedules.base import ScheduleBase
 def object_to_schedule(obj, batch_size=None, updates_per_epoch=None, **kwargs) -> ScheduleBase:
     if obj is None:
         return None
+    if isinstance(obj, (float, int)):
+        return ConstantSchedule(value=obj)
+    if isinstance(obj, list) and all(isinstance(obj[i], (float, int)) for i in range(len(obj))):
+        return CustomSchedule(obj)
     if not isinstance(obj, (list, dict)):
         assert isinstance(obj, ScheduleBase)
         return obj

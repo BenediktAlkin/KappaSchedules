@@ -122,3 +122,14 @@ class TestFactory(unittest.TestCase):
         self.assertIsInstance(sched, ks.SequentialStepSchedule)
         self.assertIsInstance(sched.schedule_configs[0].schedule, ks.PolynomialDecreasingSchedule)
         self.assertEqual(-0.1, sched.schedule_configs[0].schedule.delta)
+
+    def test_constant(self):
+        sched = ks.object_to_schedule(0.3)
+        self.assertIsInstance(sched, ks.ConstantSchedule)
+        self.assertEqual(0.3, sched.value)
+
+    def test_custom(self):
+        sched = ks.object_to_schedule([0.3, 0.4])
+        self.assertIsInstance(sched, ks.CustomSchedule)
+        values = [sched.get_value(step=i, total_steps=2) for i in range(2)]
+        self.assertEqual([0.3, 0.4], values)
