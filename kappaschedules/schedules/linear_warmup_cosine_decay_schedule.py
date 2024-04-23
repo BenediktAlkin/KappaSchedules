@@ -49,6 +49,7 @@ class LinearWarmupCosineDecaySchedule(ScheduleBase):
                             exclude_first=start_value == 0,
                             exclude_last=True,
                             start_value=start_value,
+                            max_value=max_value,
                         ),
                         end_percent=warmup_percent,
                     ),
@@ -56,6 +57,7 @@ class LinearWarmupCosineDecaySchedule(ScheduleBase):
                         schedule=CosineDecreasingSchedule(
                             exclude_first=False,
                             exclude_last=False,
+                            max_value=max_value,
                             end_value=end_value,
                         ),
                     ),
