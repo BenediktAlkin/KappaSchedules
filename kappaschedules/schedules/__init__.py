@@ -1,4 +1,5 @@
 from .base.schedule_base import ScheduleBase
+from .coldstart_linear_warmup_cosine_decay_schedule import ColdstartLinearWarmupCosineDecaySchedule
 from .constant_schedule import ConstantSchedule
 from .cosine_decreasing_schedule import CosineDecreasingSchedule
 from .cosine_increasing_schedule import CosineIncreasingSchedule
